@@ -1,22 +1,24 @@
 ﻿namespace SegmentTreeConsole;
 
-public class SegmentTree<T>
+public class GenericSegmentTree<T>
 {
+    // The left-right range are inclusive
     public readonly int DataLength;
     private ISegmentTreeNode<T>[] TreeData { get;  }
+    private Func<T?, int, int, ISegmentTreeNode<T>> TreeNodeCreator { get; }
     private Func<ISegmentTreeNode<T>, T[], ISegmentTreeNode<T>> AttributesUpdater { get;  }
+    private Func<ISegmentTreeNode<T>, T[], ISegmentTreeNode<T>> LazyAttributesUpdater { get; }
     private Func<ISegmentTreeNode<T>, ISegmentTreeNode<T>, 
         ISegmentTreeNode<T>, ISegmentTreeNode<T>> ChildrenNodesCombinator { get;  }
     private Func<T[]?, T[]?, T[]?> QueryAttributesCombinator { get;  }
     
-    private Func<T?, int, int, ISegmentTreeNode<T>> TreeNodeCreator { get;  }
     
-    public SegmentTree(T[] data, 
+    public GenericSegmentTree(T[] data, 
         Func<ISegmentTreeNode<T>, T[], ISegmentTreeNode<T>> attributesUpdater,
+        Func<ISegmentTreeNode<T>, T[], ISegmentTreeNode<T>> lazyAttributesUpdater,
         Func<ISegmentTreeNode<T>, ISegmentTreeNode<T>, 
             ISegmentTreeNode<T>, ISegmentTreeNode<T>> childrenNodesCombinator,
         Func<T[]?, T[]?, T[]?> queryAttributesCombinator,
-        Func<ISegmentTreeNode<T>, ISegmentTreeNode<T>> lazyAttributeReset,
         Func<T?, int, int, ISegmentTreeNode<T>> treeNodeCreator)
     {
         TreeData = new ISegmentTreeNode<T>[data.Length * 4];
@@ -24,10 +26,14 @@ public class SegmentTree<T>
         AttributesUpdater = attributesUpdater;
         ChildrenNodesCombinator = childrenNodesCombinator;
         TreeNodeCreator = treeNodeCreator;
-        LazyAttributeReset = lazyAttributeReset;
         DataLength = data.Length;
         QueryAttributesCombinator = queryAttributesCombinator;
-        
+        LazyAttributesUpdater = lazyAttributesUpdater;
+
+        if (data.Length == 0)
+        {
+            throw new ArgumentException("Length of data must be positive");
+        }
         this.Build(data, 1, 0,  data.Length - 1);
     }
 
@@ -55,16 +61,21 @@ public class SegmentTree<T>
     private void PushLazy(int vertex)
     {
         var parent = TreeData[vertex];
-        var leftChild = TreeData[vertex * 2];
+        if (vertex * 2 < TreeData.Length)
+        {
+            var leftChild = TreeData[vertex * 2];
+
+            TreeData[vertex * 2] = LazyAttributesUpdater(leftChild, parent.GetLazyAttributesRef());
+        }
+       
         
-        TreeData[vertex*2] = AttributesUpdater(leftChild, parent.GetLazyAttributesRef());
+        if (vertex * 2 + 1  < TreeData.Length)
+        {
+            var rightChild = TreeData[vertex * 2 + 1];
+            TreeData[vertex * 2 + 1] = LazyAttributesUpdater(rightChild, parent.GetLazyAttributesRef());
+        }
         
-        
-        var rightChild = TreeData[vertex * 2 + 1];
-        TreeData[vertex * 2 + 1] = AttributesUpdater(rightChild, parent.GetLazyAttributesRef());
-        
-        
-        parent.UpdateAttributes([], null);
+        parent.UpdateLazyAttributes(null);
     }
 
     private void UpdateRangeHelper(T[] updates, int leftUpdate, int rightUpdate, 
@@ -107,15 +118,15 @@ public class SegmentTree<T>
             return null;
         }
         
-        if (leftTree == leftQuery && rightTree == rightQuery)
+        if (leftQuery <= leftTree && rightTree <= rightQuery)
         {
             return TreeData[vertex].GetAttributesRef();
         }
         
         this.PushLazy(vertex);
         var midTree = (leftTree + rightTree) / 2;
-        var resultLeft = QueryRangeHelper(leftQuery, Math.Min(midTree, rightQuery), vertex, leftTree, midTree);
-        var resultRight = QueryRangeHelper(Math.Max(leftQuery, midTree+1), rightQuery, vertex, midTree+1, rightTree);
+        var resultLeft = QueryRangeHelper(leftQuery, Math.Min(midTree, rightQuery), vertex * 2, leftTree, midTree);
+        var resultRight = QueryRangeHelper(Math.Max(leftQuery, midTree+1), rightQuery, vertex * 2 + 1, midTree+1, rightTree);
         
         return QueryAttributesCombinator(resultLeft, resultRight);
     }
