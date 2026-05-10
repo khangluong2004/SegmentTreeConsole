@@ -48,7 +48,7 @@ public class GenericSegmentTree<T>
             var mid = (left + right) / 2;
             this.Build(data, vertex * 2, left, mid);
             this.Build(data, vertex * 2 + 1, mid + 1, right);
-            TreeData[vertex] =  TreeNodeCreator(default, left, right);
+            TreeData[vertex] =  TreeNodeCreator(null, left, right);
             TreeData[vertex] = 
                 ChildrenNodesCombinator(
                     TreeData[vertex],

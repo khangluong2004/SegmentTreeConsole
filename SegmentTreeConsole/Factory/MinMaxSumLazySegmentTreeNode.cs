@@ -20,11 +20,11 @@ public class MinMaxSumLazySegmentTreeNode<T>: ISegmentTreeNode<T>, ISegmentTreeN
     private readonly T[] _attributes;
     private readonly T[] _lazyAttributes;
     private readonly int _leftRange, _rightRange;
-    private readonly T _defaultAttributes;
-    private readonly T _defaultLazyAttributes;
+    private readonly T[] _defaultAttributes;
+    private readonly T[] _defaultLazyAttributes;
 
     public MinMaxSumLazySegmentTreeNode(T[] attributes, T[] lazyAttributes, 
-        T defaultAttributes, T defaultLazyAttributes,
+        T[] defaultAttributes, T[] defaultLazyAttributes,
         int leftRange, int rightRange)
     {
         _attributes = new T[attributes.Length];
@@ -55,7 +55,7 @@ public class MinMaxSumLazySegmentTreeNode<T>: ISegmentTreeNode<T>, ISegmentTreeN
             Array.Copy(attributeUpdates, _attributes, attributeUpdates.Length);
         } else
         {
-            Array.Fill(_attributes, _defaultAttributes);
+            Array.Copy(_defaultAttributes, _attributes, _defaultAttributes.Length);
         }
     }
 
@@ -83,7 +83,7 @@ public class MinMaxSumLazySegmentTreeNode<T>: ISegmentTreeNode<T>, ISegmentTreeN
         }
         else
         {
-            Array.Fill(_lazyAttributes, _defaultLazyAttributes);
+            Array.Copy(_defaultLazyAttributes, _lazyAttributes, _defaultLazyAttributes.Length);
         }
     }
 
