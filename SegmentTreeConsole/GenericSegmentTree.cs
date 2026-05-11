@@ -1,27 +1,27 @@
 ﻿namespace SegmentTreeConsole;
 
-public class GenericSegmentTree<T>
+public class GenericSegmentTree<TValue, TUpdate>
 {
     // The left-right range are inclusive
     public readonly int DataLength;
-    private ISegmentTreeNode<T>[] TreeData { get;  }
-    private Func<T?, int, int, ISegmentTreeNode<T>> TreeNodeCreator { get; }
-    private Func<ISegmentTreeNode<T>, T[], ISegmentTreeNode<T>> AttributesUpdater { get;  }
-    private Func<ISegmentTreeNode<T>, T[], ISegmentTreeNode<T>> LazyAttributesUpdater { get; }
-    private Func<ISegmentTreeNode<T>, ISegmentTreeNode<T>, 
-        ISegmentTreeNode<T>, ISegmentTreeNode<T>> ChildrenNodesCombinator { get;  }
-    private Func<T[]?, T[]?, T[]?> QueryAttributesCombinator { get;  }
+    private ISegmentTreeNode<TValue>[] TreeData { get;  }
+    private Func<TValue, bool, int, int, ISegmentTreeNode<TValue>> TreeNodeCreator { get; }
+    private Func<ISegmentTreeNode<TValue>, TUpdate[], ISegmentTreeNode<TValue>> AttributesUpdater { get;  }
+    private Func<ISegmentTreeNode<TValue>, TValue[], ISegmentTreeNode<TValue>> LazyAttributesUpdater { get; }
+    private Func<ISegmentTreeNode<TValue>, ISegmentTreeNode<TValue>, 
+        ISegmentTreeNode<TValue>, ISegmentTreeNode<TValue>> ChildrenNodesCombinator { get;  }
+    private Func<TValue[]?, TValue[]?, TValue[]?> QueryAttributesCombinator { get;  }
     
     
-    public GenericSegmentTree(T[] data, 
-        Func<ISegmentTreeNode<T>, T[], ISegmentTreeNode<T>> attributesUpdater,
-        Func<ISegmentTreeNode<T>, T[], ISegmentTreeNode<T>> lazyAttributesUpdater,
-        Func<ISegmentTreeNode<T>, ISegmentTreeNode<T>, 
-            ISegmentTreeNode<T>, ISegmentTreeNode<T>> childrenNodesCombinator,
-        Func<T[]?, T[]?, T[]?> queryAttributesCombinator,
-        Func<T?, int, int, ISegmentTreeNode<T>> treeNodeCreator)
+    public GenericSegmentTree(TValue[] data, 
+        Func<ISegmentTreeNode<TValue>, TUpdate[], ISegmentTreeNode<TValue>> attributesUpdater,
+        Func<ISegmentTreeNode<TValue>, TValue[], ISegmentTreeNode<TValue>> lazyAttributesUpdater,
+        Func<ISegmentTreeNode<TValue>, ISegmentTreeNode<TValue>, 
+            ISegmentTreeNode<TValue>, ISegmentTreeNode<TValue>> childrenNodesCombinator,
+        Func<TValue[]?, TValue[]?, TValue[]?> queryAttributesCombinator,
+        Func<TValue, bool, int, int, ISegmentTreeNode<TValue>> treeNodeCreator)
     {
-        TreeData = new ISegmentTreeNode<T>[data.Length * 4];
+        TreeData = new ISegmentTreeNode<TValue>[data.Length * 4];
         
         AttributesUpdater = attributesUpdater;
         ChildrenNodesCombinator = childrenNodesCombinator;
@@ -37,18 +37,18 @@ public class GenericSegmentTree<T>
         this.Build(data, 1, 0,  data.Length - 1);
     }
 
-    private void Build(T[] data, int vertex, int left, int right)
+    private void Build(TValue[] data, int vertex, int left, int right)
     {
         if (left == right)
         {
-            TreeData[vertex] = TreeNodeCreator(data[left], left, right);
+            TreeData[vertex] = TreeNodeCreator(data[left], false, left, right);
         }
         else
         {
             var mid = (left + right) / 2;
             this.Build(data, vertex * 2, left, mid);
             this.Build(data, vertex * 2 + 1, mid + 1, right);
-            TreeData[vertex] =  TreeNodeCreator(null, left, right);
+            TreeData[vertex] =  TreeNodeCreator(default, true, left, right);
             TreeData[vertex] = 
                 ChildrenNodesCombinator(
                     TreeData[vertex],
@@ -78,7 +78,7 @@ public class GenericSegmentTree<T>
         parent.UpdateLazyAttributes(null);
     }
 
-    private void UpdateRangeHelper(T[] updates, int leftUpdate, int rightUpdate, 
+    private void UpdateRangeHelper(TUpdate[] updates, int leftUpdate, int rightUpdate, 
         int vertex, int leftTree, int rightTree)
     {
         if (leftUpdate > rightTree || rightUpdate < leftTree)
@@ -106,12 +106,12 @@ public class GenericSegmentTree<T>
         }
     }
 
-    public void UpdateRange(T[] updates, int leftUpdate, int rightUpdate)
+    public void UpdateRange(TUpdate[] updates, int leftUpdate, int rightUpdate)
     {
         UpdateRangeHelper(updates, leftUpdate, rightUpdate, 1, 0, DataLength - 1);
     }
 
-    private T[]? QueryRangeHelper(int leftQuery, int rightQuery, int vertex, int leftTree, int rightTree)
+    private TValue[]? QueryRangeHelper(int leftQuery, int rightQuery, int vertex, int leftTree, int rightTree)
     {
         if (leftQuery > rightTree || rightQuery < leftTree)
         {
@@ -131,7 +131,7 @@ public class GenericSegmentTree<T>
         return QueryAttributesCombinator(resultLeft, resultRight);
     }
 
-    public T[]? QueryRange(int leftQuery, int rightQuery)
+    public TValue[]? QueryRange(int leftQuery, int rightQuery)
     {
         return QueryRangeHelper(leftQuery, rightQuery, 1, 0, DataLength - 1);
     }

@@ -8,29 +8,23 @@ Console.WriteLine("=== SUM SEGMENT TREE DEMO (using existing generic API) ===");
 Console.WriteLine("Input array:");
 
 // Made a lazy segment tree, with range query min, max, sum, and support range updates for sum
-Func<ISegmentTreeNode<int>, int[], ISegmentTreeNode<int>> lazyAttributesUpdater = (ISegmentTreeNode<int> curNode, int?[] lazyUpdates) =>
+Func<ISegmentTreeNode<int>, int[], ISegmentTreeNode<int>> lazyAttributesUpdater = (ISegmentTreeNode<int> curNode, int[] lazyUpdates) =>
 {
     // Sum lazy update
     var lazyAttributesRef = curNode.GetLazyAttributesRef();
     var sumLazyIndex = MinMaxSumLazySegmentTreeNode<int>.GetLazyAttributeIndex(SumLazyAttributeType.Sum);
-    if (lazyUpdates[sumLazyIndex] != null)
-    {
-        lazyAttributesRef[sumLazyIndex] += ((int)lazyUpdates[sumLazyIndex]!);
-    }
+    lazyAttributesRef[sumLazyIndex] += ((int)lazyUpdates[sumLazyIndex]);
 
     // Sum update on the range
     var attributesRef = curNode.GetAttributesRef();
     var sumIndex = MinMaxSumLazySegmentTreeNode<int>.GetAttributeIndex(MinMaxSumAttributeType.Sum);
     (int left, int right) = curNode.GetRange();
-    if (lazyUpdates[sumLazyIndex] != null)
-    {
-        attributesRef[sumIndex] += (((int)lazyUpdates[sumLazyIndex]!) * (right - left + 1));
-    }
+    attributesRef[sumIndex] += (((int)lazyUpdates[sumLazyIndex]) * (right - left + 1));
 
     return curNode;
 };
 
-Func<ISegmentTreeNode<int>, int[], ISegmentTreeNode<int>> attributesUpdater = (ISegmentTreeNode<int> curNode, int?[] updates) =>
+Func<ISegmentTreeNode<int>, int?[], ISegmentTreeNode<int>> attributesUpdater = (ISegmentTreeNode<int> curNode, int?[] updates) =>
 {
     var attributesRef = curNode.GetAttributesRef();
     // Min update
@@ -51,9 +45,9 @@ Func<ISegmentTreeNode<int>, int[], ISegmentTreeNode<int>> attributesUpdater = (I
     var sumIndex = MinMaxSumLazySegmentTreeNode<int>.GetAttributeIndex(MinMaxSumAttributeType.Sum);
     if (updates[sumIndex] != null)
     {
-        int?[] lazyUpdates = new int?[curNode.GetLazyAttributesRef().Length];
+        int[] lazyUpdates = new int[curNode.GetLazyAttributesRef().Length];
         var sumLazyIndex = MinMaxSumLazySegmentTreeNode<int>.GetLazyAttributeIndex(SumLazyAttributeType.Sum);
-        lazyUpdates[sumLazyIndex] = updates[sumIndex];
+        lazyUpdates[sumLazyIndex] = (int) updates[sumIndex]!;
         curNode = lazyAttributesUpdater(curNode, lazyUpdates);
     }
 
@@ -109,9 +103,9 @@ var queryAttributesCombinator = (int[]? left, int[]? right) =>
     return result;
 };
 
-Func<int?, int, int, ISegmentTreeNode<int>> treeNodeCreator = (int? value, int leftRange, int rightRange) =>
+Func<int, bool, int, int, ISegmentTreeNode<int>> treeNodeCreator = (int value, bool isNull, int leftRange, int rightRange) =>
 {
-    if (value == null)
+    if (isNull)
     {
         return new MinMaxSumLazySegmentTreeNode<int>([Int32.MaxValue, Int32.MinValue, 0], [0],
             [Int32.MaxValue, Int32.MinValue, 0], [0], leftRange, rightRange);
@@ -121,7 +115,7 @@ Func<int?, int, int, ISegmentTreeNode<int>> treeNodeCreator = (int? value, int l
         [Int32.MaxValue, Int32.MinValue, 0], [0], leftRange, rightRange);
 };
 
-var MinMaxSumLazySegmentTree = new GenericSegmentTree<int>(
+var MinMaxSumLazySegmentTree = new GenericSegmentTree<int, int?>(
         data,
         attributesUpdater: attributesUpdater,
         lazyAttributesUpdater: lazyAttributesUpdater,
@@ -129,3 +123,5 @@ var MinMaxSumLazySegmentTree = new GenericSegmentTree<int>(
         queryAttributesCombinator: queryAttributesCombinator,
         treeNodeCreator: treeNodeCreator
 );
+
+Console.WriteLine($"{string.Join(", ", MinMaxSumLazySegmentTree.QueryRange(0, 3))}");
