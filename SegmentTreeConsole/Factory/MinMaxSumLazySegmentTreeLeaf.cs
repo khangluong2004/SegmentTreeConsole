@@ -18,9 +18,9 @@ namespace SegmentTreeConsole.Factory
     public class MinMaxSumLazySegmentTreeLeaf<TValue, TLazy> : ISegmentTreeNode<TValue[], TLazy[]>, ISegmentTreeNodeAttributeIndexable<MinMaxSumLazySegmentTreeLeafAttributeType, MinMaxSumLazySegmentTreeLeafLazyAttributeType>
     {
         // Attributes: 0 = min, 1 = max, 2 = sum, 3 = lazy atributes
-        private readonly TValue[] _attributes;
+        private TValue[] _attributes;
         private readonly int _leftRange, _rightRange;
-        private readonly TValue[] _defaultAttributes;
+        private TValue[] _defaultAttributes;
 
         public MinMaxSumLazySegmentTreeLeaf(TValue[] attributes,
             TValue[] defaultAttributes, int leftRange, int rightRange)
@@ -32,19 +32,24 @@ namespace SegmentTreeConsole.Factory
             _defaultAttributes = defaultAttributes;
         }
 
+        public bool IsLeaf()
+        {
+            return true;
+        }
+
         public (int, int) GetRange()
         {
             return (_leftRange, _rightRange);
         }
 
-        public TValue[] GetAttributesRef()
+        public ref TValue[] GetAttributesRef()
         {
-            return _attributes;
+            return ref _attributes;
         }
 
 
 
-        public TLazy[] GetLazyAttributesRef()
+        public ref TLazy[] GetLazyAttributesRef()
         {
             throw new NotImplementedException();
         }

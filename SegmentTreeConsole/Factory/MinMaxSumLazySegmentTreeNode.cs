@@ -9,16 +9,16 @@ public enum MinMaxSumAttributeType
     Sum = 2
 }
 
-public enum SumLazyAttributeType
+public enum AddUpdateLazyAttributeType
 {
-    Sum=0
+    Add=0
 }
 
-public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValue[], TLazy[]>, ISegmentTreeNodeAttributeIndexable<MinMaxSumAttributeType, SumLazyAttributeType>
+public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValue[], TLazy[]>, ISegmentTreeNodeAttributeIndexable<MinMaxSumAttributeType, AddUpdateLazyAttributeType>
 {
     // Attributes: 0 = min, 1 = max, 2 = sum, 3 = lazy atributes
-    private readonly TValue[] _attributes;
-    private readonly TLazy[] _lazyAttributes;
+    private TValue[] _attributes;
+    private TLazy[] _lazyAttributes;
     private readonly int _leftRange, _rightRange;
     private readonly TValue[] _defaultAttributes;
     private readonly TLazy[] _defaultLazyAttributes;
@@ -37,14 +37,19 @@ public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValu
         _defaultLazyAttributes = defaultLazyAttributes;
     }
 
+    public bool IsLeaf()
+    {
+        return false;
+    }
+
     public (int, int) GetRange()
     {
         return (_leftRange, _rightRange);
     }
     
-    public TValue[] GetAttributesRef()
+    public ref TValue[] GetAttributesRef()
     {
-        return _attributes;
+        return ref _attributes;
     }
 
     static public int GetAttributeIndex(MinMaxSumAttributeType attributeType)
@@ -58,16 +63,16 @@ public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValu
         };
     }
 
-    public TLazy[] GetLazyAttributesRef()
+    public ref TLazy[] GetLazyAttributesRef()
     {
-        return _lazyAttributes;
+        return ref _lazyAttributes;
     }
 
-    static public int GetLazyAttributeIndex(SumLazyAttributeType attributeType)
+    static public int GetLazyAttributeIndex(AddUpdateLazyAttributeType attributeType)
     {
         return attributeType switch
         {
-            SumLazyAttributeType.Sum => 0,
+            AddUpdateLazyAttributeType.Add => 0,
             _ => throw new ArgumentOutOfRangeException(nameof(attributeType), attributeType, null),
         };
     }

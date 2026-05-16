@@ -3,12 +3,14 @@
 public interface ISegmentTreeNode<TValue, TLazy>
 {
     public (int, int) GetRange();
-    public TValue GetAttributesRef();
+    public ref TValue GetAttributesRef();
     /* null = reset, [] = keep unchanged */
-    public TLazy GetLazyAttributesRef();
+    public ref TLazy GetLazyAttributesRef();
 
     public void ResetLazyAttributes();
     public void ResetAttributes();
+
+    public bool IsLeaf();
 }
 
 public interface ISegmentTreeNodeAttributeIndexable<AttributeEnum, LazyAttributeEnum>
