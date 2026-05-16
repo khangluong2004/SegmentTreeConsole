@@ -1,13 +1,14 @@
 ﻿namespace SegmentTreeConsole;
 
-public interface ISegmentTreeNode<T>
+public interface ISegmentTreeNode<TValue, TLazy>
 {
     public (int, int) GetRange();
-    public T[] GetAttributesRef();
+    public TValue GetAttributesRef();
     /* null = reset, [] = keep unchanged */
-    public T[] GetLazyAttributesRef();
-    public void UpdateAttributes(T[]? attributeUpdates);
-    public void UpdateLazyAttributes(T[]? lazyAttributeUpdates);
+    public TLazy GetLazyAttributesRef();
+
+    public void ResetLazyAttributes();
+    public void ResetAttributes();
 }
 
 public interface ISegmentTreeNodeAttributeIndexable<AttributeEnum, LazyAttributeEnum>

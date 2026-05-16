@@ -14,22 +14,22 @@ public enum SumLazyAttributeType
     Sum=0
 }
 
-public class MinMaxSumLazySegmentTreeNode<T>: ISegmentTreeNode<T>, ISegmentTreeNodeAttributeIndexable<MinMaxSumAttributeType, SumLazyAttributeType>
+public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValue[], TLazy[]>, ISegmentTreeNodeAttributeIndexable<MinMaxSumAttributeType, SumLazyAttributeType>
 {
     // Attributes: 0 = min, 1 = max, 2 = sum, 3 = lazy atributes
-    private readonly T[] _attributes;
-    private readonly T[] _lazyAttributes;
+    private readonly TValue[] _attributes;
+    private readonly TLazy[] _lazyAttributes;
     private readonly int _leftRange, _rightRange;
-    private readonly T[] _defaultAttributes;
-    private readonly T[] _defaultLazyAttributes;
+    private readonly TValue[] _defaultAttributes;
+    private readonly TLazy[] _defaultLazyAttributes;
 
-    public MinMaxSumLazySegmentTreeNode(T[] attributes, T[] lazyAttributes, 
-        T[] defaultAttributes, T[] defaultLazyAttributes,
+    public MinMaxSumLazySegmentTreeNode(TValue[] attributes, TValue[] lazyAttributes, 
+        TValue[] defaultAttributes, TLazy[] defaultLazyAttributes,
         int leftRange, int rightRange)
     {
-        _attributes = new T[attributes.Length];
+        _attributes = new TValue[attributes.Length];
         Array.Copy(attributes, _attributes, attributes.Length);
-        _lazyAttributes = new T[lazyAttributes.Length];
+        _lazyAttributes = new TLazy[lazyAttributes.Length];
         Array.Copy(lazyAttributes, _lazyAttributes, lazyAttributes.Length);
         this._leftRange = leftRange;
         this._rightRange = rightRange;
@@ -42,21 +42,9 @@ public class MinMaxSumLazySegmentTreeNode<T>: ISegmentTreeNode<T>, ISegmentTreeN
         return (_leftRange, _rightRange);
     }
     
-    public T[] GetAttributesRef()
+    public TValue[] GetAttributesRef()
     {
         return _attributes;
-    }
-    
-
-    public void UpdateAttributes(T[]? attributeUpdates)
-    {
-        if (attributeUpdates != null)
-        {
-            Array.Copy(attributeUpdates, _attributes, attributeUpdates.Length);
-        } else
-        {
-            Array.Copy(_defaultAttributes, _attributes, _defaultAttributes.Length);
-        }
     }
 
     static public int GetAttributeIndex(MinMaxSumAttributeType attributeType)
@@ -70,21 +58,9 @@ public class MinMaxSumLazySegmentTreeNode<T>: ISegmentTreeNode<T>, ISegmentTreeN
         };
     }
 
-    public T[] GetLazyAttributesRef()
+    public TLazy[] GetLazyAttributesRef()
     {
         return _lazyAttributes;
-    }
-
-    public void UpdateLazyAttributes(T[]? lazyAttributeUpdates)
-    {
-        if (lazyAttributeUpdates != null)
-        {
-            Array.Copy(lazyAttributeUpdates, _lazyAttributes, _lazyAttributes.Length);
-        }
-        else
-        {
-            Array.Copy(_defaultLazyAttributes, _lazyAttributes, _defaultLazyAttributes.Length);
-        }
     }
 
     static public int GetLazyAttributeIndex(SumLazyAttributeType attributeType)
@@ -94,5 +70,15 @@ public class MinMaxSumLazySegmentTreeNode<T>: ISegmentTreeNode<T>, ISegmentTreeN
             SumLazyAttributeType.Sum => 0,
             _ => throw new ArgumentOutOfRangeException(nameof(attributeType), attributeType, null),
         };
+    }
+
+    public void ResetLazyAttributes()
+    {
+        Array.Copy(_defaultLazyAttributes, _lazyAttributes, _lazyAttributes.Length);
+    }
+
+    public void ResetAttributes()
+    {
+        Array.Copy(_defaultAttributes, _attributes, _attributes.Length);
     }
 }
