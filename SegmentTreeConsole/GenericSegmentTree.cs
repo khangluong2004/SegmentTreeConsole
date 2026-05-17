@@ -10,7 +10,7 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
     private Func<ISegmentTreeNode<TValue, TLazy>, TLazy, ISegmentTreeNode<TValue, TLazy>> LazyAttributesUpdater { get; }
     private Func<ISegmentTreeNode<TValue, TLazy>, ISegmentTreeNode<TValue, TLazy>, 
         ISegmentTreeNode<TValue, TLazy>, ISegmentTreeNode<TValue, TLazy>> ChildrenNodesCombinator { get;  }
-    private Func<TValue?, TValue?, TValue?> QueryAttributesCombinator { get;  }
+    private Func<TValue?, TValue?, TValue> QueryAttributesCombinator { get;  }
     
     
     public GenericSegmentTree(TValue[] data, 
@@ -18,7 +18,7 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
         Func<ISegmentTreeNode<TValue, TLazy>, TLazy, ISegmentTreeNode<TValue, TLazy>> lazyAttributesUpdater,
         Func<ISegmentTreeNode<TValue, TLazy>, ISegmentTreeNode<TValue, TLazy>, 
             ISegmentTreeNode<TValue, TLazy>, ISegmentTreeNode<TValue, TLazy>> childrenNodesCombinator,
-        Func<TValue?, TValue?, TValue?> queryAttributesCombinator,
+        Func<TValue?, TValue?, TValue> queryAttributesCombinator,
         Func<TValue, bool, int, int, ISegmentTreeNode<TValue, TLazy>> treeNodeCreator)
     {
         TreeData = new ISegmentTreeNode<TValue, TLazy>[data.Length * 4];
@@ -64,15 +64,20 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
         if (vertex * 2 < TreeData.Length)
         {
             var leftChild = TreeData[vertex * 2];
-
-            TreeData[vertex * 2] = LazyAttributesUpdater(leftChild, parent.GetLazyAttributesRef());
+            if (leftChild != null)
+            {
+                TreeData[vertex * 2] = LazyAttributesUpdater(leftChild, parent.GetLazyAttributesRef());
+            }
         }
        
         
         if (vertex * 2 + 1  < TreeData.Length)
         {
             var rightChild = TreeData[vertex * 2 + 1];
-            TreeData[vertex * 2 + 1] = LazyAttributesUpdater(rightChild, parent.GetLazyAttributesRef());
+            if (rightChild != null)
+            {
+                TreeData[vertex * 2 + 1] = LazyAttributesUpdater(rightChild, parent.GetLazyAttributesRef());
+            }
         }
         
         parent.ResetLazyAttributes();
@@ -111,13 +116,13 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
         UpdateRangeHelper(update, leftUpdate, rightUpdate, 1, 0, DataLength - 1);
     }
 
-    private TValue? QueryRangeHelper(int leftQuery, int rightQuery, int vertex, int leftTree, int rightTree)
+    private TValue QueryRangeHelper(int leftQuery, int rightQuery, int vertex, int leftTree, int rightTree)
     {
         if (leftQuery > rightTree || rightQuery < leftTree)
         {
             return default;
         }
-        
+
         if (leftQuery <= leftTree && rightTree <= rightQuery)
         {
             return TreeData[vertex].GetAttributesRef();
@@ -131,7 +136,7 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
         return QueryAttributesCombinator(resultLeft, resultRight);
     }
 
-    public TValue? QueryRange(int leftQuery, int rightQuery)
+    public TValue QueryRange(int leftQuery, int rightQuery)
     {
         return QueryRangeHelper(leftQuery, rightQuery, 1, 0, DataLength - 1);
     }
