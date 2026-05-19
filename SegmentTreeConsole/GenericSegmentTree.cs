@@ -125,7 +125,7 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
 
         if (leftQuery <= leftTree && rightTree <= rightQuery)
         {
-            return TreeData[vertex].GetAttributesRef();
+            return TreeData[vertex].GetQueryAttributesRef();
         }
         
         this.PushLazy(vertex);

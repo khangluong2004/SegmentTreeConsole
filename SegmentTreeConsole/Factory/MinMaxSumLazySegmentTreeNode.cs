@@ -86,4 +86,9 @@ public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValu
     {
         Array.Copy(_defaultAttributes, _attributes, _attributes.Length);
     }
+
+    public TValue[] GetQueryAttributesRef()
+    {
+        return _attributes;
+    }
 }

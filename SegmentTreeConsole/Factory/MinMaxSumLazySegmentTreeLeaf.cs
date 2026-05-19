@@ -75,5 +75,11 @@ namespace SegmentTreeConsole.Factory
         {
             Array.Copy(_defaultAttributes, _attributes, _attributes.Length);
         }
+
+        public TValue[] GetQueryAttributesRef()
+        {
+            var rawIndex = GetAttributeIndex(MinMaxSumLazySegmentTreeLeafAttributeType.Raw);
+            return [_attributes[rawIndex], _attributes[rawIndex], _attributes[rawIndex]];
+        }
     }
 }

@@ -4,7 +4,7 @@ public interface ISegmentTreeNode<TValue, TLazy>
 {
     public (int, int) GetRange();
     public ref TValue GetAttributesRef();
-    /* null = reset, [] = keep unchanged */
+    public TValue GetQueryAttributesRef(); // Might return a ref for performance. Need to be copied before mutating.
     public ref TLazy GetLazyAttributesRef();
 
     public void ResetLazyAttributes();
