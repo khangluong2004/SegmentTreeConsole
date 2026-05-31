@@ -62,6 +62,12 @@ public class MinMaxSumLazySegmentTreePerfTest
             times[i] = ((double) stopWatch.ElapsedTicks) / Stopwatch.Frequency * 1e6;
         }
 
-        Assert.Inconclusive(JsonSerializer.Serialize(times));
+        // Ensure it's in log complexity (can make it a bit less strict to around 2 * log(n) to accommodate for C# overhead)
+        for (int i = 1; i < NUM_SETS; i++) {
+            var ratio = times[i] / times[0];
+            var expectedCap = Math.Log(_dataSets[i].Length / _dataSets[0].Length, 2);
+            Assert.That(ratio, Is.LessThan(expectedCap), $"The run time for datasets of size {_dataSets[i].Length} should be less than {expectedCap} " +
+                $"compared to dataset with length {_dataSets[0].Length}");
+        }
     }
 }
