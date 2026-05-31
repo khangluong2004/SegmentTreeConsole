@@ -1,8 +1,5 @@
 ﻿using SegmentTreeConsole.Factory;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace SegmentTreeConsole.Tests;
 
@@ -10,9 +7,9 @@ namespace SegmentTreeConsole.Tests;
 public class MinMaxSumLazySegmentTreePerfTest
 {
     private GenericSegmentTree<int[], int, int[]>[] _minMaxSumSegmentTrees;
-    private MinMaxSumLazySegmentTreeFactory _minMaxSumLazySegmentTreeFactory = new();
+    private readonly MinMaxSumLazySegmentTreeFactory _minMaxSumLazySegmentTreeFactory = new();
     private int[][][] _dataSets;
-    private int NUM_SETS = 8;
+    private readonly int NUM_SETS = 8;
 
     [OneTimeSetUp]
     public void SetUp()

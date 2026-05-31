@@ -1,8 +1,14 @@
 ﻿namespace SegmentTreeConsole;
 
+/// <summary>
+/// Generic segment tree, customizable to different operations and data types
+/// </summary>
 public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
 {
     // The left-right range are inclusive
+    /// <summary>
+    /// The length of the input data
+    /// </summary>
     public readonly int DataLength;
     private ISegmentTreeNode<TValue, TLazy>[] TreeData { get;  }
     private Func<TValue, bool, int, int, ISegmentTreeNode<TValue, TLazy>> TreeNodeCreator { get; }
@@ -11,8 +17,16 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
     private Func<ISegmentTreeNode<TValue, TLazy>, ISegmentTreeNode<TValue, TLazy>, 
         ISegmentTreeNode<TValue, TLazy>, ISegmentTreeNode<TValue, TLazy>> ChildrenNodesCombinator { get;  }
     private Func<TValue?, TValue?, TValue> QueryAttributesCombinator { get;  }
-    
-    
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenericSegmentTree{TValue, TValueUpdate, TLazy}"/> class.
+    /// </summary>
+    /// <param name="data">Initial array of values for the segment tree. Must be non-empty.</param>
+    /// <param name="attributesUpdater">Function that applies a non-lazy update to a node's attributes.</param>
+    /// <param name="lazyAttributesUpdater">Function that applies lazy attributes from a parent to a child node.</param>
+    /// <param name="childrenNodesCombinator">Function that combines the current node with its left and right children to produce the parent's attributes.</param>
+    /// <param name="queryAttributesCombinator">Function that combines two partial query results into a single query result.</param>
+    /// <param name="treeNodeCreator">Function that creates a node given a value, leaf flag, left index and right index.</param>
     public GenericSegmentTree(TValue[] data, 
         Func<ISegmentTreeNode<TValue, TLazy>, TValueUpdate, ISegmentTreeNode<TValue, TLazy>> attributesUpdater,
         Func<ISegmentTreeNode<TValue, TLazy>, TLazy, ISegmentTreeNode<TValue, TLazy>> lazyAttributesUpdater,

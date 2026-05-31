@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SegmentTreeConsole</name>
+    </assembly>
+    <members>
+        <member name="T:SegmentTreeConsole.GenericSegmentTree`3">
+            <summary>
+            Generic segment tree, customizable to different operations and data types
+            </summary>
+        </member>
+        <member name="F:SegmentTreeConsole.GenericSegmentTree`3.DataLength">
+            <summary>
+            The length of the input data
+            </summary>
+        </member>
+        <member name="M:SegmentTreeConsole.GenericSegmentTree`3.#ctor(`0[],System.Func{SegmentTreeConsole.ISegmentTreeNode{`0,`2},`1,SegmentTreeConsole.ISegmentTreeNode{`0,`2}},System.Func{SegmentTreeConsole.ISegmentTreeNode{`0,`2},`2,SegmentTreeConsole.ISegmentTreeNode{`0,`2}},System.Func{SegmentTreeConsole.ISegmentTreeNode{`0,`2},SegmentTreeConsole.ISegmentTreeNode{`0,`2},SegmentTreeConsole.ISegmentTreeNode{`0,`2},SegmentTreeConsole.ISegmentTreeNode{`0,`2}},System.Func{`0,`0,`0},System.Func{`0,System.Boolean,System.Int32,System.Int32,SegmentTreeConsole.ISegmentTreeNode{`0,`2}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SegmentTreeConsole.GenericSegmentTree`3"/> class.
+            </summary>
+            <param name="data">Initial array of values for the segment tree. Must be non-empty.</param>
+            <param name="attributesUpdater">Function that applies a non-lazy update to a node's attributes.</param>
+            <param name="lazyAttributesUpdater">Function that applies lazy attributes from a parent to a child node.</param>
+            <param name="childrenNodesCombinator">Function that combines the current node with its left and right children to produce the parent's attributes.</param>
+            <param name="queryAttributesCombinator">Function that combines two partial query results into a single query result.</param>
+            <param name="treeNodeCreator">Function that creates a node given a value, leaf flag, left index and right index.</param>
+        </member>
+    </members>
+</doc>

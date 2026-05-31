@@ -5,6 +5,20 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <DocumentationFile>C:\KhangPC\code\csharp_playground\SegmentTreeConsole\Documentation.xml</DocumentationFile>
+        <PlatformTarget>x64</PlatformTarget>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Optimize>True</Optimize>
+		<PublishAot>True</PublishAot>
+		<PublishReadyToRun>True</PublishReadyToRun>
+		<TieredCompilation>True</TieredCompilation>
+		<TieredPGO>True</TieredPGO>
+		<PublishTrimmed>true</PublishTrimmed>
     </PropertyGroup>
+
+	<ItemGroup>
+		<RuntimeHostConfigurationOption Include="System.GC.Server" Value="true" Trim="true"/>
+	</ItemGroup>
 
 </Project>
