@@ -1,4 +1,6 @@
-﻿namespace SegmentTreeConsole;
+﻿using System.Runtime.CompilerServices;
+
+namespace SegmentTreeConsole;
 
 /// <summary>
 /// Generic segment tree, customizable to different operations and data types
@@ -72,6 +74,7 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     private void PushLazy(int vertex)
     {
         var parent = TreeData[vertex];
@@ -97,6 +100,7 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
         parent.ResetLazyAttributes();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private void UpdateRangeHelper(TValueUpdate update, int leftUpdate, int rightUpdate, 
         int vertex, int leftTree, int rightTree)
     {
@@ -125,11 +129,13 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void UpdateRange(TValueUpdate update, int leftUpdate, int rightUpdate)
     {
         UpdateRangeHelper(update, leftUpdate, rightUpdate, 1, 0, DataLength - 1);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization)]
     private TValue QueryRangeHelper(int leftQuery, int rightQuery, int vertex, int leftTree, int rightTree)
     {
         if (leftQuery > rightTree || rightQuery < leftTree)
@@ -150,6 +156,7 @@ public class GenericSegmentTree<TValue, TValueUpdate, TLazy>
         return QueryAttributesCombinator(resultLeft, resultRight);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public TValue QueryRange(int leftQuery, int rightQuery)
     {
         return QueryRangeHelper(leftQuery, rightQuery, 1, 0, DataLength - 1);

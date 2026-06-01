@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -32,16 +33,19 @@ namespace SegmentTreeConsole.Factory
             _defaultAttributes = defaultAttributes;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsLeaf()
         {
             return true;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public (int, int) GetRange()
         {
             return (_leftRange, _rightRange);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref TValue[] GetAttributesRef()
         {
             return ref _attributes;
@@ -54,6 +58,7 @@ namespace SegmentTreeConsole.Factory
             throw new NotImplementedException();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
         public static int GetAttributeIndex(MinMaxSumLazySegmentTreeLeafAttributeType attribute)
         {
             return attribute switch
@@ -71,11 +76,13 @@ namespace SegmentTreeConsole.Factory
 
         public void ResetLazyAttributes() { }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ResetAttributes()
         {
             Array.Copy(_defaultAttributes, _attributes, _attributes.Length);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public TValue[] GetQueryAttributesRef()
         {
             var rawIndex = GetAttributeIndex(MinMaxSumLazySegmentTreeLeafAttributeType.Raw);

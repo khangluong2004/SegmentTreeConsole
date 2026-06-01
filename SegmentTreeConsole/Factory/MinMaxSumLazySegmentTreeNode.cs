@@ -1,4 +1,5 @@
 ﻿using SegmentTreeConsole;
+using System.Runtime.CompilerServices;
 
 namespace SegmentTreeConsole.Factory;
 
@@ -37,21 +38,25 @@ public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValu
         _defaultLazyAttributes = defaultLazyAttributes;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsLeaf()
     {
         return false;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public (int, int) GetRange()
     {
         return (_leftRange, _rightRange);
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ref TValue[] GetAttributesRef()
     {
         return ref _attributes;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     static public int GetAttributeIndex(MinMaxSumAttributeType attributeType)
     {
         return attributeType switch
@@ -63,11 +68,13 @@ public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValu
         };
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ref TLazy[] GetLazyAttributesRef()
     {
         return ref _lazyAttributes;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     static public int GetLazyAttributeIndex(AddUpdateLazyAttributeType attributeType)
     {
         return attributeType switch
@@ -77,16 +84,19 @@ public class MinMaxSumLazySegmentTreeNode<TValue, TLazy>: ISegmentTreeNode<TValu
         };
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ResetLazyAttributes()
     {
         Array.Copy(_defaultLazyAttributes, _lazyAttributes, _lazyAttributes.Length);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ResetAttributes()
     {
         Array.Copy(_defaultAttributes, _attributes, _attributes.Length);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public TValue[] GetQueryAttributesRef()
     {
         return _attributes;

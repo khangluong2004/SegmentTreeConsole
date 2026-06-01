@@ -34,10 +34,11 @@ for (int i=0;  i<SIZE; i++)
 var bigMinMaxSumLazySegmentTree = minMaxSumLazySegmentTreeFactory.CreateSegmentTree(data);
 var left = dataPerf.Length * 3 / 11;
 var right = dataPerf.Length * 5 / 11;
-GC.TryStartNoGCRegion(30L * 1024 * 1024 * 1024);
+GC.TryStartNoGCRegion(20L * 1024 * 1024 * 1024);
 var timer = Stopwatch.StartNew();
 bigMinMaxSumLazySegmentTree.UpdateRange(10, left, right);
 timer.Stop();
 GC.EndNoGCRegion();
 var timeInNano = ((double)timer.ElapsedTicks) / Stopwatch.Frequency * 1e9;
 Console.WriteLine($"Updating {dataPerf.Length} of data takes {timeInNano} ns");
+Task.Delay(100000).Wait();
