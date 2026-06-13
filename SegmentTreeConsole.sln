@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SegmentTreeConsole", "Segme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SegmentTreeConsole.Tests", "SegmentTreeConsole.Tests\SegmentTreeConsole.Tests.csproj", "{EEBB3CA2-CFDD-4A6F-B1D7-79339191864D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SegmentTreeConsole.Benchmark", "SegmentTreeConsole.Benchmark\SegmentTreeConsole.Benchmark.csproj", "{889C627E-64FD-4382-9B10-49C773CC50F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{EEBB3CA2-CFDD-4A6F-B1D7-79339191864D}.Release|x64.Build.0 = Release|Any CPU
 		{EEBB3CA2-CFDD-4A6F-B1D7-79339191864D}.Release|x86.ActiveCfg = Release|Any CPU
 		{EEBB3CA2-CFDD-4A6F-B1D7-79339191864D}.Release|x86.Build.0 = Release|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Debug|x64.Build.0 = Debug|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Debug|x86.Build.0 = Debug|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Release|x64.ActiveCfg = Release|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Release|x64.Build.0 = Release|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Release|x86.ActiveCfg = Release|Any CPU
+		{889C627E-64FD-4382-9B10-49C773CC50F9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
