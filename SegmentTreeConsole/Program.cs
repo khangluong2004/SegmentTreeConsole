@@ -28,17 +28,21 @@ var random = new Random(seed);
 int[][] dataPerf = new int[SIZE][];
 for (int i=0;  i<SIZE; i++)
 {
-    dataPerf[i] = [random.Next(1_000_000)];
+    dataPerf[i] = [random.Next(10)];
 }
 
-var bigMinMaxSumLazySegmentTree = minMaxSumLazySegmentTreeFactory.CreateSegmentTree(data);
+var bigMinMaxSumLazySegmentTree = minMaxSumLazySegmentTreeFactory.CreateSegmentTree(dataPerf);
 var left = dataPerf.Length * 3 / 11;
 var right = dataPerf.Length * 5 / 11;
 GC.TryStartNoGCRegion(20L * 1024 * 1024 * 1024);
 var timer = Stopwatch.StartNew();
-bigMinMaxSumLazySegmentTree.UpdateRange(10, left, right);
+for (int i=0; i < 100; i++)
+{
+    bigMinMaxSumLazySegmentTree.UpdateRange(10, left, right);
+}
 timer.Stop();
 GC.EndNoGCRegion();
 var timeInNano = ((double)timer.ElapsedTicks) / Stopwatch.Frequency * 1e9;
-Console.WriteLine($"Updating {dataPerf.Length} of data takes {timeInNano} ns");
-Task.Delay(100000).Wait();
+Console.WriteLine($"Updating {dataPerf.Length} of data takes {timeInNano/100L} ns");
+Console.WriteLine($"{bigMinMaxSumLazySegmentTree.QueryRange(left + 1, left + 1)[0]}");
+Task.Delay(1000000000).Wait();
