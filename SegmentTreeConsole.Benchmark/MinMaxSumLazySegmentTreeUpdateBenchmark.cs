@@ -21,7 +21,7 @@ namespace SegmentTreeConsole.Benchmark
         }
 
         private const int leftUpdate = N * 3 / 11;
-        private const int rightUpdate = N * 9 / 11;
+        private const int rightUpdate = N * 5 / 11;
         private const int update = 31;
         [IterationCleanup]
         public void CleanupTree()
